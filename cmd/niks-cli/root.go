@@ -8,7 +8,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "niks-cli",
+	Use:   "niks",
 	Short: "A small utility wrapper to simplify working with NixOS and the Nix package manager.",
 	Long:  `A small utility wrapper to simplify working with NixOS and the Nix package manager.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -24,4 +24,3 @@ func Execute() {
 	}
 
 }
-

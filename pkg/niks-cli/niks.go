@@ -5,8 +5,8 @@ import (
 	"os/exec"
 )
 
-func Update(flakePath string, dryRun bool) error {
-	cmdArgs := []string{"switch", "--flake", flakePath}
+func Update(config string, dryRun bool) error {
+	cmdArgs := []string{"switch", "--flake .#", config}
 
 	if dryRun {
 		cmdArgs = append(cmdArgs, "--dry-run")
