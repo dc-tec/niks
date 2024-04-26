@@ -62,8 +62,9 @@ func ListGenerations() error {
 
 func CleanGenerations(generations []int) error {
 	var cmdArgs []string
+	var stdout, stderr bytes.Buffer
 
-	if generations != nil {
+	if len(generations) > 0 {
 		cmdArgs = append(cmdArgs, "--generations")
 
 		for _, gen := range generations {
@@ -72,11 +73,17 @@ func CleanGenerations(generations []int) error {
 	} else {
 
 		cmdArgs = []string{"--delete-old"}
-		fmt.Println(cmdArgs)
 	}
 
+	fmt.Printf("Executing command: nix-collect-garbage %s\n", strings.Join(cmdArgs, " "))
+
 	cmd := exec.Command("nix-collect-garbage", cmdArgs...)
-	fmt.Println(cmd)
+
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdout)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderr)
+
 	err := cmd.Run()
 
 	if err != nil {
