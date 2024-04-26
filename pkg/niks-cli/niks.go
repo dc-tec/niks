@@ -1,21 +1,40 @@
 package nikscli
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"os"
 	"os/exec"
+	"strings"
 )
 
 func Update(path string, config string) error {
 	cmdArgs := []string{"switch", "--flake", path + "#" + config}
 
-	cmd := exec.Command("nixos-rebuild", cmdArgs...)
+	cmd := exec.Command("sudo", "-n", "true")
 
-	out, err := cmd.CombinedOutput()
-	fmt.Printf("NixOS Rebuild Command: %s\n", string(out))
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+
 	if err != nil {
-		return fmt.Errorf("Failed to update system: %s", err)
+		cmd = exec.Command("doas", cmdArgs...)
+	} else {
+		cmd = exec.Command("sudo", cmdArgs...)
 	}
-	fmt.Printf("NixOS Rebuild Output: \n%s\n", string(out))
+
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdout)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderr)
+
+	if err := cmd.Start(); err != nil {
+		if strings.Contains(stderr.String(), "permission denied") {
+			return fmt.Errorf("Failed to start the update command: %w", err)
+		}
+		return fmt.Errorf("Command execution failed: %w", err)
+	}
 
 	return nil
 }

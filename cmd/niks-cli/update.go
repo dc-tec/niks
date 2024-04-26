@@ -26,7 +26,7 @@ var updateCmd = &cobra.Command{
 }
 
 func init() {
-	updateCmd.Flags().StringVarP(&config, "path", "p", ".", "Which path to use")
+	updateCmd.Flags().StringVarP(&path, "path", "p", ".", "Which path to use")
 	updateCmd.Flags().StringVarP(&config, "config", "c", "", "Which configuration to update")
 	updateCmd.MarkFlagRequired("config")
 
