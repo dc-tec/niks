@@ -5,8 +5,8 @@ import (
 	"os/exec"
 )
 
-func Update(config string, dryRun bool) error {
-	cmdArgs := []string{"switch", "--flake .#" + config}
+func Update(path string, config string, dryRun bool) error {
+	cmdArgs := []string{"switch", "--flake", path + "#" + config}
 
 	if dryRun {
 		cmdArgs = append(cmdArgs, "--dry-run")

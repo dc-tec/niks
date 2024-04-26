@@ -8,6 +8,7 @@ import (
 )
 
 var config string
+var path string
 var dryRun bool
 
 var updateCmd = &cobra.Command{
@@ -18,7 +19,7 @@ var updateCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
-		err := nikscli.Update(config, dryRun)
+		err := nikscli.Update(path, config, dryRun)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -26,6 +27,7 @@ var updateCmd = &cobra.Command{
 }
 
 func init() {
+	updateCmd.Flags().StringVarP(&config, "path", "p", "", "Which path to use")
 	updateCmd.Flags().StringVarP(&config, "config", "c", "", "Which configuration to update")
 	updateCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Dry run the update")
 	updateCmd.MarkFlagRequired("config")
