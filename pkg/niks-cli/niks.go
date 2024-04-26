@@ -11,8 +11,9 @@ func Update(path string, config string) error {
 	cmd := exec.Command("nixos-rebuild", cmdArgs...)
 
 	out, err := cmd.CombinedOutput()
+	fmt.Printf("NixOS Rebuild Command: %s\n", string(out))
 	if err != nil {
-		return fmt.Errorf("Failed to update system: %w", err)
+		return fmt.Errorf("Failed to update system: %s", err)
 	}
 	fmt.Printf("NixOS Rebuild Output: \n%s\n", string(out))
 
