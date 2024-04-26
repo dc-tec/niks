@@ -13,7 +13,7 @@
   buildGoApplication ? pkgs.buildGoApplication,
 }:
 buildGoApplication {
-  pname = "niks";
+  pname = "niks-cli";
   version = "0.1";
   pwd = ./.;
   src = ./.;
