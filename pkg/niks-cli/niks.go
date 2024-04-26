@@ -10,15 +10,16 @@ import (
 )
 
 func Update(path string, config string) error {
-	cmdArgs := []string{"switch", "--flake", path + "#" + config}
+	cmdArgs := []string{"nixos-rebuild", "switch", "--flake", path + "#" + config}
 
-	cmd := exec.Command("sudo", "-n", "true")
-
+	cmd := exec.Command("sudo", cmdArgs...)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
 	err := cmd.Run()
+
+	fmt.Printf("out: %s\n", err)
 
 	if err != nil {
 		cmd = exec.Command("doas", cmdArgs...)
