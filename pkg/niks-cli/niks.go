@@ -5,19 +5,16 @@ import (
 	"os/exec"
 )
 
-func Update(path string, config string, dryRun bool) error {
+func Update(path string, config string) error {
 	cmdArgs := []string{"switch", "--flake", path + "#" + config}
-
-	if dryRun {
-		cmdArgs = append(cmdArgs, "--dry-run")
-	}
 
 	cmd := exec.Command("nixos-rebuild", cmdArgs...)
 
-	err := cmd.Run()
+	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("Failed to update system: %w", err)
 	}
+	fmt.Printf("NixOS Rebuild Output: \n%s\n", string(out))
 
 	return nil
 }
