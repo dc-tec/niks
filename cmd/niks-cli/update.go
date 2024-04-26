@@ -7,33 +7,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func updateCmd() *cobra.Command {
-	var config string
-	var dryRun bool
+var config string
+var dryRun bool
 
-	cmd := &cobra.Command{
+var updateCmd = &cobra.Command{
 
-		Use:   "update",
-		Short: "Update the system configuration",
-		Long:  `Update the system configuration`,
+	Use:   "update",
+	Short: "Update the system configuration",
+	Long:  `Update the system configuration`,
 
-		Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 
-			err := nikscli.Update(config, dryRun)
-			if err != nil {
-				fmt.Println(err)
-			}
-		},
-	}
-
-	cmd.Flags().StringVarP(&config, "config", "c", "", "Which configuration to update")
-	cmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Dry run the update")
-	cmd.MarkFlagRequired("config")
-
-	return cmd
+		err := nikscli.Update(config, dryRun)
+		if err != nil {
+			fmt.Println(err)
+		}
+	},
 }
 
-func main() {
-	rootCmd.AddCommand(updateCmd())
-	rootCmd.Execute()
+func init() {
+	updateCmd.Flags().StringVarP(&config, "config", "c", "", "Which configuration to update")
+	updateCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "Dry run the update")
+	updateCmd.MarkFlagRequired("config")
+
+	rootCmd.AddCommand(updateCmd)
 }
