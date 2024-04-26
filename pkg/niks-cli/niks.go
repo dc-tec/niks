@@ -1,0 +1,23 @@
+package nikscli
+
+import (
+	"fmt"
+	"os/exec"
+)
+
+func Update(flakePath string, dryRun bool) error {
+	cmdArgs := []string{"switch", "--flake", flakePath}
+
+	if dryRun {
+		cmdArgs = append(cmdArgs, "--dry-run")
+	}
+
+	cmd := exec.Command("nixos-rebuild", cmdArgs...)
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("Failed to update system: %w", err)
+	}
+
+	return nil
+}
