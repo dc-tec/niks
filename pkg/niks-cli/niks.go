@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -43,21 +44,44 @@ func Update(path string, config string) error {
 	return nil
 }
 
-func listGenerations() error {
+func ListGenerations() error {
 
 	cmd := exec.Command("nix-env", "--list-generations")
 
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
+	output, err := cmd.Output()
 
-	cmd.Stdout = io.MultiWriter(os.Stdout, &stdout)
-	cmd.Stderr = io.MultiWriter(os.Stderr, &stderr)
-
-	if err := cmd.Start(); err != nil {
+	if err != nil {
 		fmt.Printf("We have some issues getting the generations: %v", err)
 	}
 
+	fmt.Println(string(output))
+
 	return nil
 
+}
+
+func CleanGenerations(generations []int) error {
+	var cmdArgs []string
+
+	if generations != nil {
+		cmdArgs = append(cmdArgs, "--generations")
+
+		for _, gen := range generations {
+			cmdArgs = append(cmdArgs, strconv.Itoa(gen))
+		}
+	} else {
+
+		cmdArgs = []string{"--delete-old"}
+		fmt.Println(cmdArgs)
+	}
+
+	cmd := exec.Command("nix-collect-garbage", cmdArgs...)
+	fmt.Println(cmd)
+	err := cmd.Run()
+
+	if err != nil {
+		return fmt.Errorf("Failed to run garbage collection: %w", err)
+	}
+
+	return nil
 }
