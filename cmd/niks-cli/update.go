@@ -32,3 +32,8 @@ func updateCmd() *cobra.Command {
 
 	return cmd
 }
+
+func main() {
+	rootCmd.AddCommand(updateCmd())
+	rootCmd.Execute()
+}
