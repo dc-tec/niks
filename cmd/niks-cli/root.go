@@ -12,7 +12,7 @@ var rootCmd = &cobra.Command{
 	Short: "A small utility wrapper to simplify working with NixOS and the Nix package manager.",
 	Long:  `A small utility wrapper to simplify working with NixOS and the Nix package manager.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		cmd.Help()
 	},
 }
 
